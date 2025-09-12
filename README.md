@@ -31,4 +31,5 @@ The goal is to perform **Exploratory Data Analysis (EDA)** and discover trends i
 ## 🚀 How to Run
 1. Clone this repository:
    ```bash
-   git clone https://github.com/sidatabrar01/data-science-projects.git
+  git clone https://github.com/sidatabrar01-code/data-science-projects.git
+
