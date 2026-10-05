@@ -1,194 +1,431 @@
-# 🎬 Netflix Content Strategy — Exploratory Data Analysis
+# Netflix Movies and TV Shows — Data Acquisition, Cleaning & EDA
 
-![Python](https://img.shields.io/badge/Python-3.9+-blue?logo=python&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-1.5+-green?logo=pandas&logoColor=white)
-![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange?logo=jupyter&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Complete-brightgreen)
+## Project Overview
 
-An end-to-end Exploratory Data Analysis of the Netflix Titles Dataset (8,807 titles) using Python.  
-The goal is to uncover content trends, audience targeting patterns, and geographic distribution insights that explain Netflix's growth strategy.
+This project focuses on the fundamental stages of a Data Science workflow: **data acquisition, data cleaning, preprocessing, and exploratory data analysis (EDA)**.
 
----
+The analysis is performed on a publicly available **Netflix Movies and TV Shows dataset** using Python. The objective is to understand the structure and quality of the dataset, identify missing and duplicate records, prepare the data for analysis, and discover meaningful patterns through statistical analysis and visualization.
 
-## 📊 Key Findings
-
-| # | Insight | Finding |
-|---|---------|---------|
-| 1 | **Content surge** | Netflix added **70% of its entire library after 2016** — a clear strategic pivot |
-| 2 | **Movies dominate** | Movies make up **~69%** of content vs 31% TV Shows |
-| 3 | **Top producer** | **USA (36%)** leads content production; **India is #2 at 11%** |
-| 4 | **Peak release months** | **July and December** consistently see the highest content additions |
-| 5 | **Target audience** | **TV-MA and TV-14** are the dominant ratings — Netflix skews adult |
-| 6 | **Top genre** | **International Movies** is the #1 genre, reflecting Netflix's global push |
-| 7 | **Content shift** | TV Show additions grew **3x faster** than Movies between 2018–2020 |
+This project was completed as part of **Week 1: Data Acquisition, Cleaning, and Exploratory Analysis**.
 
 ---
 
-## 📂 Dataset
+## Objectives
 
-- **Source:** [Netflix Titles Dataset — Kaggle](https://www.kaggle.com/datasets/shivamb/netflix-shows)
-- **Size:** 8,807 rows × 12 columns
-- **Features:** title, type, director, cast, country, date_added, release_year, rating, duration, listed_in, description
+The main objectives of this project are:
 
----
-
-## 🛠️ Tools & Libraries
-
-| Library | Purpose |
-|---------|---------|
-| `pandas` | Data loading, cleaning, manipulation |
-| `numpy` | Numerical operations |
-| `matplotlib` | Base visualizations |
-| `seaborn` | Statistical plots and styling |
-| `wordcloud` | Genre frequency visualization |
-| `jupyter notebook` | Interactive analysis environment |
+- Acquire and load a publicly available dataset.
+- Understand the structure and characteristics of the dataset.
+- Identify missing values and duplicate records.
+- Perform data cleaning and preprocessing.
+- Analyze categorical and numerical variables.
+- Generate meaningful visualizations.
+- Identify important patterns and trends.
+- Document the complete data preparation and EDA process.
 
 ---
 
-## 📁 Project Structure
+## Dataset
 
+The dataset contains information about Netflix movies and TV shows.
+
+### Dataset Statistics
+
+| Property | Value |
+|---|---:|
+| Initial Records | 6,234 |
+| Number of Columns | 12 |
+| Content Types | Movies, TV Shows |
+| Duplicate Records | 0 |
+| Dataset Format | CSV |
+
+### Important Features
+
+| Column | Description |
+|---|---|
+| `show_id` | Unique identifier for each title |
+| `type` | Movie or TV Show |
+| `title` | Name of the title |
+| `director` | Director information |
+| `cast` | Cast information |
+| `country` | Country associated with the title |
+| `date_added` | Date the title was added to Netflix |
+| `release_year` | Original release year |
+| `rating` | Content rating |
+| `duration` | Movie duration or number of TV seasons |
+| `listed_in` | Genres/categories |
+| `description` | Description of the title |
+
+---
+
+## Technologies Used
+
+- **Python**
+- **Pandas**
+- **NumPy**
+- **Matplotlib**
+- **Seaborn**
+- **Jupyter Notebook / Google Colab**
+
+---
+
+## Project Workflow
+
+The project follows the standard data preparation pipeline:
+
+```text
+Dataset Acquisition
+        ↓
+Initial Data Inspection
+        ↓
+Missing Value Analysis
+        ↓
+Duplicate Detection
+        ↓
+Data Cleaning
+        ↓
+Data Preprocessing
+        ↓
+Exploratory Data Analysis
+        ↓
+Data Visualization
+        ↓
+Insights & Conclusions
 ```
-netflix-eda/
+
+---
+
+## 1. Data Acquisition
+
+The Netflix dataset was loaded into a Pandas DataFrame from a CSV file.
+
+```python
+import pandas as pd
+
+df = pd.read_csv("netflix_titles.csv")
+
+print(df.shape)
+df.head()
+```
+
+The initial dataset contained:
+
+```text
+6,234 rows × 12 columns
+```
+
+---
+
+## 2. Initial Data Inspection
+
+Several techniques were used to understand the dataset:
+
+```python
+df.head()
+df.tail()
+df.shape
+df.columns
+df.info()
+df.describe()
+```
+
+The inspection helped identify:
+
+- Number of records
+- Number of features
+- Data types
+- Numerical distributions
+- Categorical variables
+- Potential missing values
+- Structure of the dataset
+
+---
+
+## 3. Missing Value Analysis
+
+Missing values were identified using Pandas.
+
+```python
+missing_values = df.isnull().sum()
+
+print(missing_values)
+```
+
+Missing-value percentages were also calculated to understand the severity of missing information in each column.
+
+The largest amount of missing information was observed in fields such as:
+
+- `director`
+- `cast`
+- `country`
+
+These fields were handled according to their role in the analysis rather than replacing missing information with fabricated values.
+
+---
+
+## 4. Duplicate Detection
+
+The dataset was checked for duplicate records.
+
+```python
+duplicates = df.duplicated().sum()
+
+print("Number of duplicate rows:", duplicates)
+```
+
+### Result
+
+```text
+Number of duplicate rows: 0
+```
+
+Therefore, no duplicate records needed to be removed.
+
+---
+
+## 5. Data Cleaning and Preprocessing
+
+The cleaning stage focused on preparing the dataset for exploratory analysis.
+
+The process included:
+
+- Checking missing values
+- Checking duplicate records
+- Reviewing data types
+- Converting date-related fields where required
+- Creating useful date-based features
+- Preparing categorical variables
+- Handling incomplete records according to analytical requirements
+
+For example:
+
+```python
+df["date_added"] = pd.to_datetime(
+    df["date_added"],
+    errors="coerce"
+)
+
+df["year_added"] = df["date_added"].dt.year
+df["month_added"] = df["date_added"].dt.month
+```
+
+Creating additional features makes it possible to perform time-based analysis of Netflix content.
+
+---
+
+# Exploratory Data Analysis
+
+## 6. Movies vs TV Shows
+
+The `type` column was analyzed to compare the number of Movies and TV Shows.
+
+```python
+df["type"].value_counts()
+```
+
+This analysis shows the composition of the Netflix catalog represented by the dataset.
+
+---
+
+## 7. Release Year Analysis
+
+The distribution of `release_year` was examined to understand the historical range of titles.
+
+```python
+df["release_year"].describe()
+```
+
+A histogram was also used to visualize the distribution.
+
+```python
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(10, 5))
+
+plt.hist(
+    df["release_year"],
+    bins=30
+)
+
+plt.title("Distribution of Release Years")
+plt.xlabel("Release Year")
+plt.ylabel("Number of Titles")
+
+plt.show()
+```
+
+---
+
+## 8. Content Ratings
+
+The distribution of Netflix content ratings was explored to understand the types of content present in the dataset.
+
+```python
+df["rating"].value_counts()
+```
+
+A visualization was created to make the distribution easier to interpret.
+
+---
+
+## 9. Genre Analysis
+
+The `listed_in` column was examined to identify frequently occurring genres and categories.
+
+```python
+df["listed_in"].value_counts()
+```
+
+Because a title can belong to multiple categories, genre analysis can be further improved by splitting the comma-separated values into individual categories.
+
+---
+
+## 10. Duration Analysis
+
+The `duration` column contains different types of information:
+
+- Movie duration in minutes
+- Number of seasons for TV Shows
+
+Therefore, Movies and TV Shows should be analyzed separately rather than treating duration as a single numerical variable.
+
+---
+
+# Visualizations
+
+The project includes visualizations for understanding:
+
+1. Missing values
+2. Movies vs TV Shows
+3. Release-year distribution
+4. Content ratings
+5. Country distribution
+6. Genre distribution
+7. Movie duration
+8. TV Show seasons
+9. Content added over time
+10. Relationships between selected numerical variables
+
+Example:
+
+```python
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(10, 6))
+
+sns.countplot(
+    data=df,
+    x="type"
+)
+
+plt.title("Movies vs TV Shows")
+plt.xlabel("Content Type")
+plt.ylabel("Number of Titles")
+
+plt.show()
+```
+
+---
+
+# Key Insights
+
+The analysis produced several important observations:
+
+- The dataset contains **6,234 Netflix titles** across **12 columns**.
+- The dataset includes both **Movies and TV Shows**.
+- No duplicate records were identified.
+- Missing information is concentrated mainly in the `director`, `cast`, and `country` fields.
+- The dataset covers titles released across a wide range of years.
+- Netflix content can be analyzed using multiple dimensions including content type, release year, rating, country, genre, and duration.
+- Movie duration and TV Show duration require separate treatment because they represent different concepts.
+
+---
+
+# Data Quality Considerations
+
+Several considerations were identified during the analysis:
+
+### Missing Data
+
+Some columns contain substantial missing information. Missing values should be handled according to the purpose of the analysis instead of blindly replacing them.
+
+### Multiple Values in a Single Column
+
+Fields such as `country` and `listed_in` may contain multiple values in a single record.
+
+For advanced analysis, these fields can be normalized into separate rows.
+
+### Duration
+
+The `duration` column represents:
+
+```text
+Movie → Duration in minutes
+TV Show → Number of seasons
+```
+
+Therefore, it should not be treated as one common numerical feature.
+
+---
+
+# Project Structure
+
+```text
+Netflix-Data-Analysis/
 │
-├── netflix_eda_analysis.ipynb    # Main analysis notebook
-├── netflix_titles.csv            # Dataset (download from Kaggle)
-├── plots/                        # Saved chart images
-│   ├── content_growth.png
-│   ├── movies_vs_shows.png
-│   ├── top_countries.png
-│   ├── monthly_additions.png
-│   ├── rating_distribution.png
-│   └── genre_wordcloud.png
-├── requirements.txt
+├── netflix_titles.csv
+│
+├── netflix_analysis.ipynb
+│
+├── Week_1_Netflix_Data_Analysis_Report.docx
+│
 └── README.md
 ```
 
 ---
 
-## 🔍 Analysis Sections
+# Future Improvements
 
-### 1. Data Cleaning
-- Handled **missing values** in `country`, `date_added`, and `rating` columns
-- Parsed `date_added` into `year_added` and `month_added` features
-- Removed duplicates and standardised text columns
-- Final clean dataset: **~8,600 usable rows**
+The project can be extended by:
 
-### 2. Content Type Distribution
-- Pie chart and bar chart showing Movies vs TV Shows split
-- **Finding:** Netflix is primarily a movie platform but is actively growing its TV Show catalogue
-
-### 3. Content Growth Over Time
-- Line chart of titles added per year (2008–2021)
-- **Finding:** Exponential growth from 2016 onwards — Netflix's content investment strategy is clearly visible in the data
-
-### 4. Geographic Analysis
-- Horizontal bar chart of top 10 content-producing countries
-- **Finding:** USA dominates but India's rapid rise signals a major market push
-
-### 5. Monthly Release Patterns
-- Bar chart of titles added by month
-- **Finding:** July (summer holidays) and December (festive season) are Netflix's preferred release windows
-
-### 6. Audience Rating Analysis
-- Distribution of content ratings (G, PG, PG-13, TV-MA, TV-14, etc.)
-- **Finding:** Adult content (TV-MA + TV-14) accounts for over 60% of the catalogue
-
-### 7. Genre Analysis (WordCloud)
-- WordCloud of `listed_in` categories
-- **Finding:** International Movies, Dramas, and Comedies are the three dominant genres
+- Performing detailed country-wise analysis.
+- Performing advanced genre analysis.
+- Creating separate movie and TV-show datasets.
+- Building interactive dashboards.
+- Performing statistical hypothesis testing.
+- Applying clustering techniques.
+- Building a Netflix recommendation system.
+- Performing Natural Language Processing on title descriptions.
+- Developing machine-learning models based on the dataset.
 
 ---
 
-## 💡 Business Recommendations
+# Conclusion
 
-Based on the analysis, here are data-driven recommendations for Netflix's content strategy:
+This project demonstrates the essential first steps of a Data Science workflow using a real-world Netflix dataset.
 
-**1. Double down on TV Shows**  
-TV Show additions grew 3x faster than Movies between 2018–2020. Binge-watching behaviour strongly favours multi-season originals — this is where Netflix should continue investing for subscriber retention.
+The dataset was acquired, inspected, analyzed for missing and duplicate records, cleaned where appropriate, and explored using statistical techniques and visualizations.
 
-**2. Expand Indian and regional content**  
-India is the #2 content-producing country but regional language content (Hindi, Tamil, Telugu) remains underrepresented in top genres. Localised originals are a clear growth lever for the South Asian market.
-
-**3. Optimise release timing**  
-July and December are peak content windows — likely timed to school/college holidays. Marketing teams should align major title launches with these months for maximum subscriber impact.
-
-**4. Family content is an untapped opportunity**  
-TV-G and TV-Y content (family/kids) is heavily underrepresented relative to adult content. With increasing competition from Disney+, family programming is a strategic white space for Netflix.
-
-**5. Leverage International Movies category**  
-International Movies is the #1 genre — Netflix's global audience is actively seeking non-English content. Investing in subtitling and dubbing of regional titles can accelerate this further.
+The analysis provides a strong foundation for further work involving **data visualization, statistical analysis, machine learning, recommendation systems, and natural language processing**.
 
 ---
 
-## 🚀 How to Run
+## Author
 
-**1. Clone the repository**
-```bash
-git clone https://github.com/sidatabrar01-code/data-science-projects.git
-cd data-science-projects
-```
+**Abrar Sidat**
 
-**2. Install dependencies**
-```bash
-pip install -r requirements.txt
-```
-
-**3. Download the dataset**  
-Download `netflix_titles.csv` from [Kaggle](https://www.kaggle.com/datasets/shivamb/netflix-shows) and place it in the project root folder.
-
-**4. Run the notebook**
-```bash
-jupyter notebook netflix_eda_analysis.ipynb
-```
+Computer Science and Engineering  
+Ghousia College of Engineering, Ramanagaram, Karnataka, India
 
 ---
 
-## 📋 Requirements
+## Project Type
 
-```
-pandas>=1.5.0
-numpy>=1.23.0
-matplotlib>=3.6.0
-seaborn>=0.12.0
-wordcloud>=1.9.0
-jupyter>=1.0.0
-```
+**Data Science | Data Cleaning | Exploratory Data Analysis | Python**
 
 ---
 
-## 📈 Sample Visualizations
+## License
 
-> *(Add your chart screenshots here after running the notebook)*  
-> Drag and drop images into this section on GitHub, or reference files from the `plots/` folder:
-
-```markdown
-![Content Growth Over Time](plots/content_growth.png)
-![Top Countries](plots/top_countries.png)
-![Genre WordCloud](plots/genre_wordcloud.png)
-```
-
----
-
-## 🎯 Skills Demonstrated
-
-- **Data Cleaning** — handling nulls, parsing dates, deduplication  
-- **Exploratory Data Analysis** — univariate, bivariate, and time-series analysis  
-- **Data Visualisation** — bar charts, line charts, pie charts, heatmaps, WordCloud  
-- **Business Thinking** — translating data insights into actionable recommendations  
-- **Python Libraries** — Pandas, NumPy, Matplotlib, Seaborn  
-
----
-
-## 👤 About Me
-
-**Sidat Abrar Idrish**  
-3rd Year CSE Student | Aspiring Data Scientist  
-📍 Karnataka, India
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/sidat-abraridrish-06026225a)
-[![GitHub](https://img.shields.io/badge/GitHub-Portfolio-black?logo=github)](https://github.com/sidatabrar01-code)
-[![Credly](https://img.shields.io/badge/Credly-Certifications-orange?logo=credly)](https://www.credly.com/users/sidat-abraridrish)
-
----
-
-*If you found this project useful, please consider giving it a ⭐ — it helps others discover it!*
+This project is intended for educational and learning purposes.
